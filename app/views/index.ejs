@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title><%=title %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="/css/reset.css" />
+    <link rel="stylesheet" href="/libraries/jqx/jqx.base.css" />
+    <link rel="stylesheet" href="/libraries/jqx/custom_theme.css" />
+    <style>
+        body {
+            background-color: #313132;
+        }
+        .wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: grid;
+            grid-template-columns: 20% 80%;
+            grid-template-rows: 100%;
+        }
+        .wrapper_side_l {
+            color: #fff;
+            border-right: 1px solid #3b3b3b;
+            background-color: #313132;
+        }
+        .wrapper_side_r {
+            border: 1px solid #3b3b3b;
+            margin: 20px;
+            background-color: #313132;
+        }
+        .side_bar_top {
+            width: 100%;
+            height: 10%;
+            padding: 4px;
+        }
+        .side_bar_main {
+            padding: 4px;
+            width: 100%;
+            height: 90% - 8;
+        }
+        .side_bar_header {
+            margin: 0 auto;
+            width: 90%;
+            height: 100%;
+            border-bottom: 2px solid #3c3c3d;
+        }
+        .side_bar_header h1 {
+            color: #fff;
+            height: inherit;
+            line-height: normal;
+        }
+        .side_bar_main p {
+            margin-bottom: 10px;
+        }
+    </style>
+    <script src="/libraries/jqx/jquery-3.2.1.js" type="text/javascript"></script>
+    <script src="/libraries/jqx/jqxcore.js" type="text/javascript"></script>
+    <script src="/libraries/jqx/jqxdata.js" type="text/javascript"></script>
+    <script src="/libraries/jqx/jqxbuttons.js" type="text/javascript"></script>
+    <script src="/libraries/jqx/jqxscrollbar.js" type="text/javascript"></script>
+    <script src="/libraries/jqx/jqxdropdownlist.js" type="text/javascript"></script>
+    <script src="/libraries/jqx/jqxmenu.js" type="text/javascript"></script>
+    <script src="/libraries/jqx/jqxnumberinput.js" type="text/javascript"></script>
+    <script src="/libraries/jqx/jqxpanel.js" type="text/javascript"></script>
+    <script src="/libraries/jqx/jqxdatetimeinput.js" type="text/javascript"></script>
+    <script src="/libraries/jqx/jqxcalendar.js" type="text/javascript"></script>
+    <script src="/libraries/jqx/jqxtooltip.js" type="text/javascript"></script>
+    <script src="/libraries/jqx/jqxinput.js" type="text/javascript"></script>
+    <script src="/libraries/jqx/jqxlistbox.js" type="text/javascript"></script>
+    <script src="/libraries/jqx/jqxcombobox.js" type="text/javascript"></script>
+    <script src="/libraries/jqx/jqxnotification.js" type="text/javascript"></script>
+    <script src="/libraries/jqx/jqxdatatable.js" type="text/javascript"></script>
+    <script src="/libraries/jqx/globalize.js" type="text/javascript"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="wrapper_side_l">
+            <div class="side_bar_top">
+                <div class="side_bar_header">
+                    <h1>数据查询</h1>
+                </div>
+            </div>
+            <div class="side_bar_main">
+                <P>
+                    <label>日期/时间范围 输入</label>
+                    <input type="datetime" id='input_date_time' />
+                </P>
+                <p>
+                    <label title="用户识别号">IMSI 输入</label>
+                    <input type="text" id="imsi_input"/>
+                </p>
+                <p>
+                    <label title="设备识别号">IMEI 输入</label>
+                    <input type="text" id="imei_input"/>
+                </p>
+                <p>
+                    <label title="电话号码">MSISDN 输入</label>
+                    <input type="text" id="msisdn_input"/>
+                </p>
+                <p>
+                    <select id="country_input">
+                        <option value>选择国家</option>
+                        <option value="460">中国</option>
+                    </select>
+                </p>
+                <p>
+                    <select id="isp_input">
+                        <option value>选择运营商</option>
+                        <option value="00">移动</option>
+                        <option value="01">联通</option>
+                        <option value="11">电信</option>
+                    </select>
+                </p>
+                <p>
+                    <label title="基站编码">基站编码</label>
+                    <input type="text" id="cell_input"></input>
+                </p>
+                <p>
+                    <input type="button" value="查询" id="submit_btn"></input>
+                </p>
+            </div>
+        </div>
+        <div class="wrapper_side_r">
+            <div id="data_table"></div>
+        </div>
+    </div>
+    <p id="jqxNotification">
+        <div id="notificationContent">
+        </div>
+    </p>
+</body>
+<script src="/js/index.js"></script>
+</html>
