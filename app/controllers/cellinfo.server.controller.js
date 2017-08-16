@@ -8,10 +8,10 @@ exports.read = function(req, res, next) {
     "use strict";
     const queryArr = mysqlQuery.prepareQueryStrArr(req),
            countQueryArr = mysqlQuery.prepareQueryStrArr(req, true);
-    console.log(queryArr);
-    mysqlgen.autorun(mysqlgen.serigen(queryArr, req.query.pageSize * 5), (err, data) => {
+    console.log(req.query);
+    mysqlgen.autorun(mysqlgen.serigen(queryArr, Number(req.query.pagesize) * (+ req.query.pagenum + 5)), (err, data) => {
         if (err) {
-            console.log('throw err', err);
+            //console.log('throw err', err);
             throw err;
             res.json({
                 ri:{
@@ -21,7 +21,7 @@ exports.read = function(req, res, next) {
             });
             return next(err);
         }
-        console.log('success', data);
+        //console.log('success', data.length);
         /*todo:查询符合条件的记录总数*/
         mysqlgen.autorun(mysqlgen.serigen(countQueryArr), (error, results) => {
             let count = 0;

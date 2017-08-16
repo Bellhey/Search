@@ -13,6 +13,7 @@ $(() => {
         $ispInput = $('#isp_input'),
         $countryInput = $('#country_input'),
         $cellInput = $('#cell_input'),
+        $lacInput = $('#lac_input'),
         $dataTable = $('#data_table'),
         header = null;
     let prepareHeader = function() {
@@ -40,8 +41,8 @@ $(() => {
             console.log('请输入查询参数');
             return false;
         }
-        if (!(($('#country_input option:selected').val() && $('#isp_input option:selected').val() && $cellInput.jqxInput('value')) || (!$('#country_input option:selected').val() && !$('#isp_input option:selected').val() && !$cellInput.jqxInput('value')))) {
-            console.log($('#country_input option:selected').val(), $('#isp_input option:selected').val(), $cellInput.jqxInput('value'))
+        if (!(($('#country_input option:selected').val() && $('#isp_input option:selected').val() && $cellInput.jqxInput('value') && $lacInput.jqxInput('value')) || (!$('#country_input option:selected').val() && !$('#isp_input option:selected').val() && !$cellInput.jqxInput('value') && !$lacInput.jqxInput('value')))) {
+            console.log($('#country_input option:selected').val(), $('#isp_input option:selected').val(), $cellInput.jqxInput('value'));
             console.log('需要输入关于基站的全部信息');
             return false;
         }
@@ -90,6 +91,11 @@ $(() => {
         height: '25px',
         theme: 'metroDark'
     });
+    $lacInput.jqxInput({
+        width: '194px',
+        height: '25px',
+        theme: 'metroDark'
+    });
     /*init country input*/
 /*   $countryInput.jqxComboBox({
         width: '194px',
@@ -122,9 +128,11 @@ $(() => {
     $dataTable.jqxDataTable({
         width: '100%',
         height: '100%',
-        pageSize: 27,
+        pageSize: 30,
         theme: 'metroDark',
         serverProcessing: true,
+        autoRowHeight: true,
+        columnsResize: true,
 /*        filterable: true,*/
         pageable: true,
         columns: [
@@ -133,11 +141,35 @@ $(() => {
                 return date.toLocaleString();
             }},
             { text: 'IMSI', dataField: 'IMSI',  width: '10%' },
-            { text: 'IMEI', width: '10%', dataField: 'IMEI', cellsAlign: 'left', cellsFormat: 'd'},
+            { text: 'IMEI', width: '10%', dataField: 'IMEI', cellsAlign: 'left'},
             { text: 'MSISDN', dataField: 'MSISDN', cellsAlign: 'left', width: '10%' },
-            { text: '事件', dataField: 'SRC', cellsAlign: 'left', width: '4%' },
-            { text: '国家编码', cellsAlign: 'left', dataField: 'mcc', width: '10%'},
-            { text: '运营商编码', cellsAlign: 'left', dataField: 'mnc', width: '6%'},
+            { text: '事件', dataField: 'SRC', cellsAlign: 'left', width: '9%', cellsrenderer: (rowIndex, colfield, val) => {
+                switch (val) {
+                    case 0:
+                        return "上线激活";
+                        break;
+                    case 1:
+                        return "位置更新";
+                        break;
+                    case 2:
+                        return "离线去活";
+                        break;
+                }
+            }},
+            { text: '国家编码', cellsAlign: 'left', dataField: 'mcc', width: '5%'},
+            { text: '运营商', cellsAlign: 'left', dataField: 'mnc', width: '6%', cellsrenderer: (rowIndex, colfield, val) => {
+                switch (val) {
+                    case 0:
+                        return "移动";
+                        break;
+                    case 1:
+                        return "联通";
+                        break;
+                    case 2:
+                        return "电信";
+                        break;
+                }
+            }},
             { text: '基站编码', cellsAlign: 'left', datafield: 'ci', width: '10%'},
             { text: '行政区划', cellsAlign: 'left', datafield: 'addr', width: '30%'}
         ]
@@ -248,7 +280,8 @@ $(() => {
                         $msisdnInputVal = $msisdnInput.jqxInput('value'),
                         $countryInputVal = $('#country_input option:selected').val(),
                         $ispInputVal = $('#isp_input option:selected').val(),
-                        $cellInputVal = $cellInput.jqxInput('value');
+                        $cellInputVal = $cellInput.jqxInput('value'),
+                        $lacInputVal = $lacInput.jqxInput('value');
 /*                        $cityInputVal = $cityInput.jqxComboBox('getSelectedItem') ? $cityInput.jqxComboBox('getSelectedItem').value : '',
                         $districtInputVal = $districtInput.jqxComboBox('getSelectedItem') ? $districtInput.jqxComboBox('getSelectedItem').value : '',
                         $townshipInputVal = $townshipInput.jqxComboBox('getSelectedItem') ? $townshipInput.jqxComboBox('getSelectedItem').value : '';*/
@@ -259,6 +292,7 @@ $(() => {
                         $countryInputVal && (data.mcc = $countryInputVal);
                         $ispInputVal && (data.mnc = $ispInputVal);
                         $cellInputVal && (data.ci = $cellInputVal);
+                        $lacInputVal && (data.lac = $lacInputVal);
 /*                      $cityInputVal && (data.city = $cityInputVal);
                         $districtInputVal && (data.district = $districtInputVal);
                         $townshipInputVal && (data.township = $townshipInputVal);*/
@@ -269,7 +303,7 @@ $(() => {
                 },
                 downloadComplete: function (data, status, xhr) {
                     console.log('after complete', data);
-                    //source.totalRecords = data.d.count;
+                    source.totalRecords = data.d.count;
                     //$dataTable.jqxDataTable('updateBoundData');
                 },
                 loadError: function (xhr, status, error) {

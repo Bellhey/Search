@@ -11,30 +11,35 @@ exports.serigen = function* (queryArr, resultLimit) {
         length = queryArr.length,
         results = [];
     do {
-        console.log('query string${i}', queryArr[i]);
-        const result = yield mysqlDBQueryThunk(queryArr[i]);
-        results.push(...result);
+        //console.info('querystr', queryArr[i] + (resultLimit ?  ' LIMIT ' + resultLimit : ''));
+        const result = yield mysqlDBQueryThunk(queryArr[i] + (resultLimit ?  ' LIMIT ' + resultLimit : ''));
+        if (result === null) {
+        } else {
+            console.log('back data', result, queryArr, i);
+            resultLimit && (resultLimit = resultLimit - result.length);
+            results.push(...result);
+        }
         i += 1;
-    } while (i < length && (resultLimit ? (results.length < resultLimit) : true));
+    } while (i < length && (resultLimit ? (results.length < resultLimit) ? true : false : true));
     return results;
 };
 
 exports.autorun = (gen, cb) => {
     "use strict";
     const next = (err, data) => {
-               if (err) {
-                   cb(err);
-               } else {
-                   console.log('cb in');
-                   const result = gen.next(data);
-                   if (result.done) {
-                       console.log('finished');
-                       cb(null, result.value);
-                   } else {
-                       console.log('result value', result.value);
-                       result.value(next);
-                   }
-               }
-           };
-           next();
+        let result = null;
+       if (err) {
+           result = gen.next(null);
+       } else {
+           result = gen.next(data);
+       }
+        if (result.done) {
+            //console.log('finished', result.value);
+            cb(null, result.value);
+        } else {
+            //console.log('result value', result.value);
+            result.value(next);
+        }
+    };
+    next();
 };

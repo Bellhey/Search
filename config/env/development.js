@@ -5,10 +5,10 @@ module.exports = {
     //Development configuration options
     db: {
         mysql:{
-            host: 'localhost',
+            host: '10.0.0.171',
             user: 'root',
-            password: 'xw',
-            database: 'search'
+            password: 'cssc(2011)cssc',
+            database: 'test'
         }
     }
 };
